@@ -1,4 +1,8 @@
 # app/routes.py
+from flask import Blueprint, jsonify
+from app import create_app
+from app.extensions import db, bcrypt
+from app.models import User
 from datetime import date, datetime
 from io import StringIO
 import csv
@@ -429,3 +433,20 @@ def api_workflows_delete(wid):
     db.session.delete(w)
     db.session.commit()
     return jsonify({"ok": True}), 200
+
+# Endpoint temporário para criar usuário admin
+@bp.route("/create-admin-temp", methods=["POST"])
+def create_admin_temp():
+    # Se já existe, atualiza
+    User.query.filter_by(email="admin@opens.com").delete()
+    db.session.commit()
+
+    admin = User(
+        nome="Admin OpenS",
+        email="admin@opens.com",
+        senha_hash=bcrypt.generate_password_hash("opens2025").decode("utf-8"),
+        role="admin"
+    )
+    db.session.add(admin)
+    db.session.commit()
+    return jsonify({"status": "ok", "msg": "Usuário admin criado ou atualizado com sucesso"})
