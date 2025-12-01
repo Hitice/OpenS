@@ -1,13 +1,20 @@
-# render.yaml
 services:
   - type: web
     name: opens
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn run:app
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.6
-      - key: PORT
-        sync: false
+      - key: SECRET_KEY
+        fromDatabase: false
+      - key: JWT_SECRET_KEY
+        fromDatabase: false
+      - key: DATABASE_URL
+        fromDatabase: false
+      - key: MAIL_USERNAME
+        fromDatabase: false
+      - key: MAIL_PASSWORD
+        fromDatabase: false
