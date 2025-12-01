@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Chamados - OpenS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3">
+
+  <!-- Cabeçalho -->
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex align-items-center gap-3">
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+        Dashboard
+      </a>
+      <h1 class="h3 fw-semibold text-dark mb-0">Chamados</h1>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="/novo-chamado" class="btn btn-primary btn-sm">
+        Novo Chamado
+      </a>
+      <button id="exportCsv" class="btn btn-outline-success btn-sm">
+        Exportar CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4 col-lg-3">
+          <label class="form-label small text-muted fw-medium">Busca</label>
+          <input id="f_q" type="text" class="form-control" placeholder="ID, título ou descrição...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small text-muted fw-medium">Prioridade</label>
+          <select id="f_prioridade" class="form-select">
+            <option value="">Todas</option>
+            <option>BAIXA</option><option>MÉDIA</option><option>ALTA</option><option>CRÍTICA</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small text-muted fw-medium">Status</label>
+          <select id="f_status" class="form-select">
+            <option value="">Todos</option>
+            <option>ABERTO</option><option>EM ANDAMENTO</option><option>PENDENTE</option><option>RESOLVIDO</option>
+          </select>
+        </div>
+        <div class="col-md-2 col-lg-1">
+          <label class="form-label small text-muted fw-medium">Por página</label>
+          <select id="f_perpage" class="form-select">
+            <option>10</option><option selected>25</option><option>50</option><option>100</option>
+          </select>
+        </div>
+        <div class="col-md-auto ms-auto">
+          <div class="d-flex gap-2">
+            <button id="btn_filtrar" class="btn btn-primary">Filtrar</button>
+            <button id="btn_limpar" class="btn btn-outline-secondary">Limpar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th class="text-center" style="width:80px">#</th>
+              <th>Título</th>
+              <th class="text-center" style="width:120px">Prioridade</th>
+              <th class="text-center" style="width:130px">Status</th>
+              <th style="width:160px">Autor</th>
+              <th style="width:140px">Criado em</th>
+              <th class="text-center" style="width:100px">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbChamados"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
+      <small id="metaInfo" class="text-muted">—</small>
+      <div id="paginator" class="d-flex gap-2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CORRIGIDO -->
+<div class="modal fade" id="modalChamado" tabindex="-1" aria-labelledby="modalChamadoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <form id="formChamadoEdit">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalChamadoLabel">Chamado <span id="modalId" class="fw-bold">#000</span></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-medium">Título</label>
+          <input type="text" id="edit_titulo" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-medium">Descrição</label>
+          <textarea id="edit_descricao" class="form-control" rows="5"></textarea>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Prioridade</label>
+            <select id="edit_prioridade" class="form-select">
+              <option>BAIXA</option><option>MÉDIA</option><option>ALTA</option><option>CRÍTICA</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Status</label>
+            <select id="edit_status" class="form-select">
+              <option>ABERTO</option><option>EM ANDAMENTO</option><option>PENDENTE</option><option>RESOLVIDO</option>
+            </select>
+          </div>
+        </div>
+        <input type="hidden" id="edit_id">
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnDelete" class="btn btn-outline-danger me-auto">Remover</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chamados.js') }}?v={{ config.get('STATIC_VERSION', 1) }}"></script>
+{% endblock %}

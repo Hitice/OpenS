@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - OpenS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+
+  <!-- Cabeçalho -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="h4 fw-semibold text-dark">
+      <i class="fas fa-tachometer-alt text-primary me-2"></i> Dashboard
+    </h1>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="/novo-chamado" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus me-1"></i> Novo Chamado
+      </a>
+      <a href="/chamados" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-list me-1"></i> Todos os Chamados
+      </a>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-stat shadow-sm h-100" data-filter="ALL">
+        <div class="card-body text-center py-3">
+          <i class="fas fa-clipboard-list text-primary fs-4 mb-1"></i>
+          <small class="text-muted d-block mb-1">Total</small>
+          <strong id="total" class="fs-5">0</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-stat shadow-sm h-100" data-filter="ABERTOS">
+        <div class="card-body text-center py-3">
+          <i class="fas fa-hourglass-start text-warning fs-4 mb-1"></i>
+          <small class="text-muted d-block mb-1">Abertos</small>
+          <strong id="abertos" class="fs-5">0</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-stat shadow-sm h-100" data-filter="ALTA_CRIT">
+        <div class="card-body text-center py-3">
+          <i class="fas fa-exclamation-triangle text-danger fs-4 mb-1"></i>
+          <small class="text-muted d-block mb-1">Alta / Crítica</small>
+          <strong id="alta" class="fs-5">0</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-stat shadow-sm h-100" data-filter="HOJE">
+        <div class="card-body text-center py-3">
+          <i class="fas fa-calendar-day text-success fs-4 mb-1"></i>
+          <small class="text-muted d-block mb-1">Criados Hoje</small>
+          <strong id="hoje" class="fs-5">0</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos e Tabela -->
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-gradient-primary text-white text-center small fw-medium">
+              Prioridade
+            </div>
+            <div class="card-body p-3">
+              <canvas id="chartPrioridade" style="height: 220px;"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-gradient-info text-white text-center small fw-medium">
+              Status
+            </div>
+            <div class="card-body p-3">
+              <canvas id="chartStatus" style="height: 220px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="card shadow-sm border-0 mt-3">
+        <div class="card-header bg-dark text-white small fw-medium">
+          Chamados Filtrados
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive" style="max-height:400px;">
+            <table class="table table-hover mb-0 align-middle">
+              <thead class="table-light sticky-top small">
+                <tr>
+                  <th class="text-center">ID</th>
+                  <th>Título</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Prioridade</th>
+                  <th class="text-center">Data</th>
+                </tr>
+              </thead>
+              <tbody id="tbChamados"></tbody>
+            </table>
+            <div id="emptyTable" class="text-center py-4 text-muted d-none small">
+              <i class="fas fa-inbox fs-2 mb-2 opacity-25"></i>
+              Nenhum chamado encontrado com este filtro.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Power Automate -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header bg-gradient-teal text-white text-center small fw-medium">
+          <i class="fas fa-robot me-1"></i> Power Automate
+        </div>
+        <div class="card-body p-2">
+          <ul id="listaRegras" class="list-group list-group-flush small"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}?v={{ config.get('STATIC_VERSION', 1) }}"></script>
+{% endblock %}
