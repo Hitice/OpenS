@@ -40,3 +40,4 @@ yarn-error.log
 *.pyo
 *.pyd
 *.cache
+.env

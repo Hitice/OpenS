@@ -1,13 +1,5 @@
 # app/routes.py
-from flask import Blueprint, jsonify
-from app import create_app
-from app.extensions import db, bcrypt
-from app.models import User
-from datetime import date, datetime
-from io import StringIO
-import csv
-
-from flask import Blueprint, render_template, jsonify, request, current_app, Response, abort
+from flask import Blueprint, render_template, jsonify, request, current_app, Response
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -15,14 +7,17 @@ from flask_jwt_extended import (
     unset_jwt_cookies,
     get_jwt_identity
 )
+from datetime import date, datetime
 from sqlalchemy import func
-from .models import User, Chamado, WorkflowAcao  # WorkflowAcao pode não existir — crie se pedido
+from io import StringIO
+import csv
+
+from .extensions import db, bcrypt
+from .models import User, Chamado, WorkflowAcao
 from .utils import sanitize_dict
-from .workflows import processar_workflow  # módulo opcional; se não existir, remova a chamada
-import typing
+from .workflows import processar_workflow  # Remover se não existir
 
 bp = Blueprint("main", __name__)
-
 
 # --------------------------
 # PÁGINAS
@@ -31,24 +26,20 @@ bp = Blueprint("main", __name__)
 def login_page():
     return render_template("login.html")
 
-
 @bp.route("/dashboard")
 @jwt_required()
 def dashboard():
     return render_template("dashboard.html")
-
 
 @bp.route("/chamados")
 @jwt_required()
 def chamados_page():
     return render_template("chamados.html")
 
-
-@bp.route("/novo-chamado")
+@bp.route("/novo_chamado")
 @jwt_required()
 def novo_chamado_page():
     return render_template("novo_chamado.html", hoje=date.today().isoformat())
-
 
 # --------------------------
 # AUTH
@@ -56,8 +47,8 @@ def novo_chamado_page():
 @bp.route("/api/login", methods=["POST"])
 def api_login():
     data = sanitize_dict(request.get_json() or {})
-    email = data.get("email", "").strip().lower()
-    senha = data.get("senha", "").strip()
+    email = (data.get("email") or "").strip().lower()
+    senha = (data.get("senha") or "").strip()
 
     if not email or not senha:
         return jsonify({"erro": "Credenciais incompletas"}), 400
@@ -67,10 +58,13 @@ def api_login():
         return jsonify({"erro": "E-mail ou senha incorretos"}), 401
 
     access_token = create_access_token(identity=str(user.id))
-    resp = jsonify({"msg": "Login realizado com sucesso"})
+    resp = jsonify({
+        "msg": "Login realizado com sucesso",
+        "access_token": access_token,
+        "user": {"id": user.id, "nome": user.nome, "email": user.email, "role": user.role}
+    })
     set_access_cookies(resp, access_token)
     return resp, 200
-
 
 @bp.route("/logout", methods=["POST"])
 @jwt_required()
@@ -79,13 +73,11 @@ def api_logout():
     unset_jwt_cookies(resp)
     return resp
 
-
 # --------------------------
 # HELPER: serialização de Chamado
 # --------------------------
 def chamado_to_dict(c: Chamado, usuarios_cache: dict):
     uid = c.criado_por
-    # usa None key coerente
     cache_key = uid if uid is not None else 0
     if cache_key not in usuarios_cache:
         u = User.query.get(uid) if uid else None
@@ -103,14 +95,12 @@ def chamado_to_dict(c: Chamado, usuarios_cache: dict):
         "data": c.criado_em.strftime("%d/%m/%Y %H:%M")
     }
 
-
 # --------------------------
-# CHAMADOS — LIST / FILTER / PAGINATION (GET) + EXPORT CSV
+# CHAMADOS — LIST / FILTER / PAGINATION + EXPORT CSV
 # --------------------------
 @bp.route("/api/chamados")
 @jwt_required()
 def api_chamados():
-    # parâmetros
     q = (request.args.get("q") or "").strip()
     prioridade = (request.args.get("prioridade") or "").strip().upper()
     status = (request.args.get("status") or "").strip().upper()
@@ -121,55 +111,38 @@ def api_chamados():
         page, per_page = 1, 25
 
     query = Chamado.query
-
     if q:
         if q.isdigit():
             query = query.filter(Chamado.id == int(q))
         else:
             like = f"%{q}%"
             query = query.filter(Chamado.titulo.ilike(like) | Chamado.descricao.ilike(like))
-
     if prioridade:
         query = query.filter(Chamado.prioridade == prioridade)
-
     if status:
         query = query.filter(Chamado.status == status)
 
     total = query.count()
     total_pages = (total // per_page) + (1 if total % per_page else 0)
 
-    items_q = (
-        query.order_by(Chamado.id.desc())
-        .limit(per_page)
-        .offset((page - 1) * per_page)
-        .all()
-    )
-
+    items_q = query.order_by(Chamado.id.desc()).limit(per_page).offset((page - 1) * per_page).all()
     usuarios_cache = {}
     items = [chamado_to_dict(c, usuarios_cache) for c in items_q]
 
-    # all_items curta (para gráficos): limit 500
     all_items_q = query.order_by(Chamado.id.desc()).limit(500).all()
     all_items = [chamado_to_dict(c, usuarios_cache) for c in all_items_q]
 
     return jsonify({
         "items": items,
         "all_items": all_items,
-        "meta": {
-            "page": page,
-            "per_page": per_page,
-            "total": total,
-            "total_pages": total_pages
-        }
+        "meta": {"page": page, "per_page": per_page, "total": total, "total_pages": total_pages}
     })
-
 
 @bp.route("/api/chamados/export")
 @jwt_required()
 def api_chamados_export():
     fmt = (request.args.get("format") or "csv").lower()
     query = Chamado.query.order_by(Chamado.id.desc()).limit(2000).all()
-
     usuarios_cache = {}
     rows = [chamado_to_dict(c, usuarios_cache) for c in query]
 
@@ -183,8 +156,8 @@ def api_chamados_export():
         return Response(output, mimetype="text/csv", headers={
             "Content-Disposition": f"attachment; filename=chamados-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}.csv"
         })
-    else:
-        return jsonify(rows)
+    return jsonify(rows)
+
 
 
 # --------------------------
@@ -286,7 +259,6 @@ def api_stats():
         "alta": alta_critica,
         "hoje": hoje
     })
-
 
 # --------------------------
 # CRIAÇÃO NOVO CHAMADO (mantido)
@@ -433,19 +405,3 @@ def api_workflows_delete(wid):
     db.session.commit()
     return jsonify({"ok": True}), 200
 
-# Endpoint temporário para criar usuário admin
-@bp.route("/create-admin-temp", methods=["POST"])
-def create_admin_temp():
-    # Se já existe, atualiza
-    User.query.filter_by(email="admin@opens.com").delete()
-    db.session.commit()
-
-    admin = User(
-        nome="Admin OpenS",
-        email="admin@opens.com",
-        senha_hash=bcrypt.generate_password_hash("opens2025").decode("utf-8"),
-        role="admin"
-    )
-    db.session.add(admin)
-    db.session.commit()
-    return jsonify({"status": "ok", "msg": "Usuário admin criado ou atualizado com sucesso"})
