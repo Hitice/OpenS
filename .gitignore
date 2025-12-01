@@ -1,1 +1,42 @@
+# Ambiente virtual
+venv/
+.env
+*.pyc
+__pycache__/
 
+# Configurações locais
+instance/
+*.sqlite
+*.db
+*.log
+
+# Migrations automáticas
+migrations/__pycache__/
+migrations/versions/*.pyc
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Distribuição / build
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Node / frontend
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Arquivos de cache
+*.pyo
+*.pyd
+*.cache
