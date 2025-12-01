@@ -16,7 +16,6 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 from sqlalchemy import func
-from .extensions import db, bcrypt
 from .models import User, Chamado, WorkflowAcao  # WorkflowAcao pode não existir — crie se pedido
 from .utils import sanitize_dict
 from .workflows import processar_workflow  # módulo opcional; se não existir, remova a chamada
