@@ -7,29 +7,40 @@
     <div class="col-12 col-md-5 col-lg-4">
       <div class="card shadow border-0 rounded-4">
         <div class="card-body p-4">
+
+          <!-- Logo e título -->
           <div class="text-center mb-3">
-            <h2 class="fw-bold text-primary"><i class="fas fa-truck-fast me-2"></i>OpenS</h2>
+            <h2 class="fw-bold text-primary">
+              <i class="bi bi-truck me-2"></i> OpenS
+            </h2>
             <p class="text-muted mb-0">Gestão Inteligente de Chamados</p>
           </div>
 
+          <!-- Formulário -->
           <form id="loginForm" class="mt-4">
             <div class="mb-3">
-              <label class="form-label">E-mail</label>
+              <label for="email" class="form-label">E-mail</label>
               <input id="email" type="email" class="form-control form-control-lg" autocomplete="username" required value="admin@opens.com">
             </div>
+
             <div class="mb-3">
-              <label class="form-label">Senha</label>
+              <label for="senha" class="form-label">Senha</label>
               <input id="senha" type="password" class="form-control form-control-lg" autocomplete="current-password" required value="opens2025">
             </div>
 
             <div id="loginAlert" class="alert alert-danger d-none py-2" role="alert"></div>
 
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-sign-in-alt me-2"></i> Entrar</button>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+              </button>
             </div>
           </form>
 
-          <div class="text-center text-muted small mt-3">admin@opens.com • opens2025</div>
+          <!-- Credenciais padrão -->
+          <div class="text-center text-muted small mt-3">
+            admin@opens.com • opens2025
+          </div>
         </div>
       </div>
     </div>

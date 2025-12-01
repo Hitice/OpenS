@@ -5,19 +5,19 @@
 <div class="container-fluid py-4 px-3">
 
   <!-- Cabeçalho -->
-  <div class="d-flex justify-content-between align-items-center mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-2">
     <div class="d-flex align-items-center gap-3">
       <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary btn-sm">
         Dashboard
       </a>
       <h1 class="h3 fw-semibold text-dark mb-0">Chamados</h1>
     </div>
-    <div class="d-flex gap-2">
-      <a href="/novo-chamado" class="btn btn-primary btn-sm">
-        Novo Chamado
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('main.novo_chamado') }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-circle me-1"></i> Novo Chamado
       </a>
       <button id="exportCsv" class="btn btn-outline-success btn-sm">
-        Exportar CSV
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar CSV
       </button>
     </div>
   </div>
@@ -34,20 +34,29 @@
           <label class="form-label small text-muted fw-medium">Prioridade</label>
           <select id="f_prioridade" class="form-select">
             <option value="">Todas</option>
-            <option>BAIXA</option><option>MÉDIA</option><option>ALTA</option><option>CRÍTICA</option>
+            <option>BAIXA</option>
+            <option>MÉDIA</option>
+            <option>ALTA</option>
+            <option>CRÍTICA</option>
           </select>
         </div>
         <div class="col-md-2">
           <label class="form-label small text-muted fw-medium">Status</label>
           <select id="f_status" class="form-select">
             <option value="">Todos</option>
-            <option>ABERTO</option><option>EM ANDAMENTO</option><option>PENDENTE</option><option>RESOLVIDO</option>
+            <option>ABERTO</option>
+            <option>EM ANDAMENTO</option>
+            <option>PENDENTE</option>
+            <option>RESOLVIDO</option>
           </select>
         </div>
         <div class="col-md-2 col-lg-1">
           <label class="form-label small text-muted fw-medium">Por página</label>
           <select id="f_perpage" class="form-select">
-            <option>10</option><option selected>25</option><option>50</option><option>100</option>
+            <option>10</option>
+            <option selected>25</option>
+            <option>50</option>
+            <option>100</option>
           </select>
         </div>
         <div class="col-md-auto ms-auto">
@@ -87,46 +96,53 @@
   </div>
 </div>
 
-<!-- MODAL CORRIGIDO -->
+<!-- Modal de Edição -->
 <div class="modal fade" id="modalChamado" tabindex="-1" aria-labelledby="modalChamadoLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-    <form id="formChamadoEdit">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalChamadoLabel">Chamado <span id="modalId" class="fw-bold">#000</span></h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label fw-medium">Título</label>
-          <input type="text" id="edit_titulo" class="form-control" required>
+      <form id="formChamadoEdit">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalChamadoLabel">Chamado <span id="modalId" class="fw-bold">#000</span></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        <div class="mb-3">
-          <label class="form-label fw-medium">Descrição</label>
-          <textarea id="edit_descricao" class="form-control" rows="5"></textarea>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Prioridade</label>
-            <select id="edit_prioridade" class="form-select">
-              <option>BAIXA</option><option>MÉDIA</option><option>ALTA</option><option>CRÍTICA</option>
-            </select>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-medium">Título</label>
+            <input type="text" id="edit_titulo" class="form-control" required>
           </div>
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Status</label>
-            <select id="edit_status" class="form-select">
-              <option>ABERTO</option><option>EM ANDAMENTO</option><option>PENDENTE</option><option>RESOLVIDO</option>
-            </select>
+          <div class="mb-3">
+            <label class="form-label fw-medium">Descrição</label>
+            <textarea id="edit_descricao" class="form-control" rows="5"></textarea>
           </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-medium">Prioridade</label>
+              <select id="edit_prioridade" class="form-select">
+                <option>BAIXA</option>
+                <option>MÉDIA</option>
+                <option>ALTA</option>
+                <option>CRÍTICA</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-medium">Status</label>
+              <select id="edit_status" class="form-select">
+                <option>ABERTO</option>
+                <option>EM ANDAMENTO</option>
+                <option>PENDENTE</option>
+                <option>RESOLVIDO</option>
+              </select>
+            </div>
+          </div>
+          <input type="hidden" id="edit_id">
         </div>
-        <input type="hidden" id="edit_id">
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="btnDelete" class="btn btn-outline-danger me-auto">Remover</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Salvar</button>
-      </div>
-    </form>
+        <div class="modal-footer">
+          <button type="button" id="btnDelete" class="btn btn-outline-danger me-auto">Remover</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -7,24 +7,24 @@
   <!-- Cabeçalho -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <h1 class="h4 fw-semibold text-dark">
-      <i class="fas fa-tachometer-alt text-primary me-2"></i> Dashboard
+      <i class="bi bi-speedometer2 text-primary me-2"></i> Dashboard
     </h1>
     <div class="d-flex gap-2 flex-wrap">
-      <a href="/novo-chamado" class="btn btn-primary btn-sm">
-        <i class="fas fa-plus me-1"></i> Novo Chamado
+      <a href="{{ url_for('main.novo_chamado') }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-circle me-1"></i> Novo Chamado
       </a>
-      <a href="/chamados" class="btn btn-outline-secondary btn-sm">
-        <i class="fas fa-list me-1"></i> Todos os Chamados
+      <a href="{{ url_for('main.chamados') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-list-ul me-1"></i> Todos os Chamados
       </a>
     </div>
   </div>
 
-  <!-- Cards -->
+  <!-- Cards de resumo -->
   <div class="row g-3 mb-4">
     <div class="col-sm-6 col-lg-3">
       <div class="card card-stat shadow-sm h-100" data-filter="ALL">
         <div class="card-body text-center py-3">
-          <i class="fas fa-clipboard-list text-primary fs-4 mb-1"></i>
+          <i class="bi bi-clipboard-data text-primary fs-4 mb-1"></i>
           <small class="text-muted d-block mb-1">Total</small>
           <strong id="total" class="fs-5">0</strong>
         </div>
@@ -33,7 +33,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card card-stat shadow-sm h-100" data-filter="ABERTOS">
         <div class="card-body text-center py-3">
-          <i class="fas fa-hourglass-start text-warning fs-4 mb-1"></i>
+          <i class="bi bi-hourglass-split text-warning fs-4 mb-1"></i>
           <small class="text-muted d-block mb-1">Abertos</small>
           <strong id="abertos" class="fs-5">0</strong>
         </div>
@@ -42,7 +42,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card card-stat shadow-sm h-100" data-filter="ALTA_CRIT">
         <div class="card-body text-center py-3">
-          <i class="fas fa-exclamation-triangle text-danger fs-4 mb-1"></i>
+          <i class="bi bi-exclamation-triangle text-danger fs-4 mb-1"></i>
           <small class="text-muted d-block mb-1">Alta / Crítica</small>
           <strong id="alta" class="fs-5">0</strong>
         </div>
@@ -51,7 +51,7 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card card-stat shadow-sm h-100" data-filter="HOJE">
         <div class="card-body text-center py-3">
-          <i class="fas fa-calendar-day text-success fs-4 mb-1"></i>
+          <i class="bi bi-calendar-day text-success fs-4 mb-1"></i>
           <small class="text-muted d-block mb-1">Criados Hoje</small>
           <strong id="hoje" class="fs-5">0</strong>
         </div>
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <!-- Gráficos e Tabela -->
+  <!-- Gráficos -->
   <div class="row g-3">
     <div class="col-lg-8">
       <div class="row g-3">
@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <!-- Tabela -->
+      <!-- Tabela de chamados filtrados -->
       <div class="card shadow-sm border-0 mt-3">
         <div class="card-header bg-dark text-white small fw-medium">
           Chamados Filtrados
@@ -105,7 +105,7 @@
               <tbody id="tbChamados"></tbody>
             </table>
             <div id="emptyTable" class="text-center py-4 text-muted d-none small">
-              <i class="fas fa-inbox fs-2 mb-2 opacity-25"></i>
+              <i class="bi bi-inbox fs-2 mb-2 opacity-25"></i>
               Nenhum chamado encontrado com este filtro.
             </div>
           </div>
@@ -117,7 +117,7 @@
     <div class="col-lg-4">
       <div class="card shadow-sm border-0 h-100">
         <div class="card-header bg-gradient-teal text-white text-center small fw-medium">
-          <i class="fas fa-robot me-1"></i> Power Automate
+          <i class="bi bi-robot me-1"></i> Power Automate
         </div>
         <div class="card-body p-2">
           <ul id="listaRegras" class="list-group list-group-flush small"></ul>
