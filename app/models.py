@@ -1,8 +1,6 @@
-# app/models.py
 from .extensions import db
 from datetime import datetime
 import json
-
 
 # =========================
 # USER
@@ -30,7 +28,6 @@ class User(db.Model):
             "role": self.role
         }
 
-
 # =========================
 # CHAMADO
 # =========================
@@ -43,7 +40,7 @@ class Chamado(db.Model):
     prioridade = db.Column(db.String(20), default="MÉDIA")
     status = db.Column(db.String(20), default="ABERTO")
 
-    criado_por = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    criado_por = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
 
     workflow = db.relationship("WorkflowAcao", backref="chamado", lazy=True)
@@ -62,7 +59,6 @@ class Chamado(db.Model):
             "criado_em": self.criado_em.isoformat(),
         }
 
-
 # =========================
 # WORKFLOW AÇÕES
 # =========================
@@ -70,14 +66,21 @@ class WorkflowAcao(db.Model):
     __tablename__ = "workflow_acao"
 
     id = db.Column(db.Integer, primary_key=True)
+    chamado_id = db.Column(db.Integer, db.ForeignKey("chamado.id"), nullable=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
 
-    chamado_id = db.Column(db.Integer, db.ForeignKey("chamado.id"), nullable=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    nome = db.Column(db.String(100), nullable=False)
+    gatilho = db.Column(db.String(50), nullable=False)
+    acao = db.Column(db.String(50), nullable=False)
+    ativo = db.Column(db.Boolean, default=True)
 
-    acao = db.Column(db.String(50), nullable=False)  # CRIADO, EDITADO, STATUS, PRIORIDADE, COMENTÁRIO
-    antes = db.Column(db.Text)       # JSON
-    depois = db.Column(db.Text)      # JSON
+    antes = db.Column(db.JSON)
+    depois = db.Column(db.JSON)
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+
+    prioridade_cond = db.Column(db.String(20))
+    status_cond = db.Column(db.String(20))
+    novo_status = db.Column(db.String(20))
 
     def __repr__(self):
         return f"<WorkflowAcao {self.acao} CH:{self.chamado_id}>"
@@ -87,8 +90,14 @@ class WorkflowAcao(db.Model):
             "id": self.id,
             "chamado_id": self.chamado_id,
             "usuario_id": self.usuario_id,
+            "nome": self.nome,
+            "gatilho": self.gatilho,
             "acao": self.acao,
-            "antes": json.loads(self.antes) if self.antes else None,
-            "depois": json.loads(self.depois) if self.depois else None,
+            "ativo": self.ativo,
+            "antes": self.antes,
+            "depois": self.depois,
+            "prioridade_cond": self.prioridade_cond,
+            "status_cond": self.status_cond,
+            "novo_status": self.novo_status,
             "criado_em": self.criado_em.isoformat(),
         }
