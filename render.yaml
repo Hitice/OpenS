@@ -4,17 +4,13 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn "run:app" --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.6
       - key: SECRET_KEY
-        fromDatabase: false
+        value: 8baa1e03a7abd620ad3a2d4919a784803327d6f0
       - key: JWT_SECRET_KEY
-        fromDatabase: false
+        value: 6718e13e2a7a2d4919a784803327d6f0
       - key: DATABASE_URL
-        fromDatabase: false
-      - key: MAIL_USERNAME
-        fromDatabase: false
-      - key: MAIL_PASSWORD
-        fromDatabase: false
+        value: postgres://user:password@hostname:5432/dbname
