@@ -1,23 +1,13 @@
+# render.yaml
 services:
   - type: web
     name: opens
     env: python
     plan: free
-    rootDirectory: .
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn run:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.6
-      - key: SECRET_KEY
-        value: 8baa1e03a7abd620ad3a2e16985311d8
-      - key: JWT_SECRET_KEY
-        value: 6718e13e2a7a2d4919a784803327d6f0
-      - key: MAIL_USERNAME
-        value: pedromuska@gmail.com
-      - key: MAIL_PASSWORD
-        value: utgkhalnnwftonje
-      - key: DATABASE_URL
-        value: sqlite:///instance/opens.db
-      - key: FLASK_ENV
-        value: production
+      - key: PORT
+        sync: false

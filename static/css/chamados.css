@@ -1,0 +1,29 @@
+/* static/css/dashboard.css — já tem tudo isso (ou deve ter agora) */
+
+.card { border: none !important; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+.btn { border-radius: 0.5rem; font-weight: 500; }
+.btn-sm { padding: 0.35rem 0.75rem; }
+
+.form-control, .form-select {
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge-status {
+  font-size: 0.72rem;
+  padding: 0.35em 0.75em;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+/* Cores de prioridade (já usadas no JS) */
+.bg-danger    { background-color: #dc3545 !important; }
+.bg-warning   { background-color: #ffc107 !important; color: #000 !important; }
+.bg-info      { background-color: #0dcaf0 !important; color: #000 !important; }
+.bg-success   { background-color: #198754 !important; }

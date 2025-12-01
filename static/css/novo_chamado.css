@@ -1,0 +1,56 @@
+/* static/css/novo_chamado.css */
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.card-novo {
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+
+/* barra superior */
+.card-header-novo {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    padding: 2rem;
+    border: none;
+}
+
+/* campos */
+.form-control,
+.form-select {
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 1.05rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all .25s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(0,123,255,0.25);
+    transform: translateY(-2px);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 150px;
+}
+
+/* botão */
+.btn-success {
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all .25s ease;
+    box-shadow: 0 10px 30px rgba(25,135,84,0.35);
+}
+
+.btn-success:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(25,135,84,0.55);
+}
